@@ -1,7 +1,7 @@
 import { Schema, model, models } from "mongoose"
 
 export const conditionsSchema = new Schema({
-    _id:false,
+    _id: false,
     name: { type: String, required: true }, // Nombre
     fixedRate: { type: String, required: true }, // Tasa fija
     interestPayment: { type: String, required: true }, // Pago de intereses
@@ -23,10 +23,12 @@ export const conditionsSchema = new Schema({
     sector: { type: String, required: true } // Sector
 
 })
+
 export const shareholdersSchema = new Schema({
+    email: { type: String, required: true },
+    amount: { type: Number, required: true },
 
 })
-
 
 export const investmentSchema = new Schema({
     company: { type: String, required: true },
@@ -51,6 +53,7 @@ export const investmentSchema = new Schema({
     },
     socialMedia: {
         website: { type: String },
+        email:{type:String},
         facebook: { type: String },
         instagram: { type: String },
         youtube: { type: String },

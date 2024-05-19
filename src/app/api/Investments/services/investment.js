@@ -6,6 +6,20 @@ export class InvestmentService {
         return await new InvestmentModel(Investment).save()
     }
 
+    static async invest(user, investment) {
+        user.amount = investment.amount
+        return await InvestmentModel.findOneAndUpdate({ _id: investment.id },
+            {
+                $push: { shareholders: user },
+                $inc: { investments: 1, "fundraising.amount": investment.amount },
+            },
+            {
+                runValidators: true,
+                new: true
+            }
+        )
+    }
+
     static async get(filter) {
         return await InvestmentModel.find(filter)
     }
