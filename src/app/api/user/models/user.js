@@ -1,10 +1,11 @@
 import { Schema, model, models } from "mongoose"
 
-export const investmentSchema = new Schema({
 
+export const userSchema = new Schema({
+    email: { type: String },
     investment: {
-        amount: Number,
-        currency: String
+        amount: {type:Number, required:true},
+        currency: {type:String, required:true}
     },
     business: {
         url: { type: String, required: true },
@@ -21,12 +22,6 @@ export const investmentSchema = new Schema({
         start: { type: String, required: true },
         end: { type: String, required: true },
     }
-})
-
-export const userSchema = new Schema({
-    email: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    investments: [investmentSchema]
 })
 
 export const UserModel = models.Users || model("Users", userSchema) 

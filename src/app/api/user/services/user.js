@@ -2,16 +2,8 @@ import { UserModel } from "../models/user";
 
 export class UserService {
 
-    static async addInvestment(email, investment) {
-        return await UserModel.findOneAndUpdate({ email: email },
-            {
-                $push: {investments: investment}
-            },
-            {
-                runValidators: true,
-                new: true
-            }
-        )
+    static async addInvestment(email, investment, business) {
+        return await UserModel({ email: email, investment, business }).save()
     }
 
     static async create(user) {
@@ -19,6 +11,6 @@ export class UserService {
     }
 
     static async getByEmail(email) {
-        return await UserModel.findOne({email:email})
+        return await UserModel.find({ email: email }).select("investment business -_id")
     }
 }

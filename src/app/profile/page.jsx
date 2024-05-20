@@ -6,7 +6,7 @@ import Logout from "../logout.jsx"
 export default async function ProfileServer() {
     const { user } = await getSession();
     await connectDb()
-    const { investments } = await UserService.getByEmail(user.email)
+    const investments = await UserService.getByEmail(user.email)
     console.log(investments);
     return (
 
@@ -17,7 +17,7 @@ export default async function ProfileServer() {
                     <img src={user.picture} alt={user.name} />
                     <h2>{user.name}</h2>
                     <p>{user.email}</p>
-                    <br/ >
+                    <br />
                     <ul>
                         {investments && investments.length > 0 ? (
                             investments.map((investment, index) => (
@@ -42,7 +42,7 @@ export default async function ProfileServer() {
                                             </ul>
                                         </div>
                                     </div>
-                                    <br/>
+                                    <br />
                                 </li>
                             ))
                         ) : (

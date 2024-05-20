@@ -49,8 +49,8 @@ export const POST = (async (request, { params }) => {
         const { user, investment, business } = await request.json();
         business.url = request.url
         investment.id = params.id
-        
-        await UserService.addInvestment(user.email, {investment, business})
+
+        await UserService.addInvestment(user.email, investment, business)
         const investmentUpdated = await InvestmentService.invest(user, investment);
         return NextResponse.json({ ok: true, response: investmentUpdated });
     } catch (error) {
