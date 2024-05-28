@@ -27,7 +27,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/app/Investments/route.js"  ],
+, "src/app/investments/route.js", "src/app/investments/page.jsx"  ],
   "exclude": [
     "node_modules"
   ]
