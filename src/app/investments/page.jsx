@@ -30,7 +30,7 @@ const Investments = () => {
   }, []);
 
   const handleInvestmentClick = (investmentId) => {
-    const url = `/Investments/${investmentId}`;
+    const url = `/investments/${investmentId}`;
     router.push(url);
   };
 

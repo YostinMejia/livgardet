@@ -1,6 +1,9 @@
+import { getSession } from '@auth0/nextjs-auth0';
+
+//const { user } = await getSession(); 
+
 const fetchInvestmentDetails = async (id) => {
     const response = await fetch(`http://localhost:3000/api/Investments/${id}`);
-    console.log(response, "llllllll3llllllllllllllllllllllllll");
     if (!response.ok) {
         throw new Error('Failed to fetch investment details');
     }
@@ -9,6 +12,22 @@ const fetchInvestmentDetails = async (id) => {
     return data.response;
 };
 
+const fetchCreateInvestment = async (investmentData) => {
+    const response = await fetch(`http://localhost:3000/api/Investments`,{
+    method: 'POST',
+    headers: {
+        'content-type': 'application/json',
+    },
+    body:JSON.stringify(investmentData),
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to post investment details');
+    }
+
+    const data = await response.json();
+    return data;
+    };
 
 
 export default async function InvestmentDetails(request) {
@@ -88,7 +107,18 @@ export default async function InvestmentDetails(request) {
                         <div>
                             <p className="text-gray-700"><span className="font-semibold">Tipo de Ronda de Inversión:</span> {investment.conditions.typeOfInvestmentRound}</p>
                             <p className="text-gray-700"><span className="font-semibold">Sector:</span> {investment.conditions.sector}</p>
+                            <br />
+                            <p className="text-gray-700"><span className="font-semibold">Fecha de inico de la inversión:</span> {investment.start}</p>
+                            <p className="text-gray-700"><span className="font-semibold">Fecha de fin de la Inversión:</span> {investment.end}</p>
                         </div>
+                    </div>
+                    <div className="mt-8 text-center">
+                        <button
+                            //onClick={handleSendData}
+                            className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700"
+                        >
+                            Invertir
+                        </button>
                     </div>
                 </div>
             </div>
