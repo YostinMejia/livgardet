@@ -25,9 +25,9 @@ export class InvestmentService {
     }
 
     static async getById(id) {
-        console.log(id);
+        // console.log(id);
         const Investment = await InvestmentModel.findById(id).select("-shareholders")
-        console.log(Investment);
+        // console.log(Investment);
         return Investment
     }
 

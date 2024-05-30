@@ -74,7 +74,7 @@ const Investments = () => {
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-500">No investments found.</p>
+          <p className="text-center text-gray-500">Cargando....</p>
         )}
       </div>
     </main>
