@@ -1,4 +1,4 @@
-import { UserProvider} from '@auth0/nextjs-auth0/client';
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { getSession } from '@auth0/nextjs-auth0';
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -14,30 +14,34 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <UserProvider>
-
-      <body className={inter.className}>
-
-      <Header></Header>
-        {children}
+        <body className={inter.className}>
+          <Header />
+          {children}
         </body>
       </UserProvider>
     </html>
   );
 }
 
-
-
 async function Header() {
-
   const user = await getSession();
 
-  return  (
+  return (
     <header className="bg-gray-800 text-white py-4 px-8 flex justify-between items-center">
       <div>
-        <a href="/investments" className="text-xl font-bold">Emprendimientos</a>
+        <a href="/" className="text-xl font-bold">MoneyMingle</a>
       </div>
-      <nav>
-        <ul className="flex items-center space-x-4">
+      <nav className="flex-1 flex justify-center">
+        <ul className="flex items-center space-x-8">
+          <li>
+            <a href="/guia-financiera" className="hover:text-gray-300">Guía Financiera</a>
+          </li>
+          <li>
+            <a href="/investments" className="hover:text-gray-300">Emprendimientos</a>
+          </li>
+          <li>
+            <a href="/crear-emprendimiento" className="hover:text-gray-300">Crear Emprendimiento</a>
+          </li>
           {!user && (
             <li>
               <a href="/api/auth/login" className="hover:text-gray-300">Iniciar Sesión</a>
