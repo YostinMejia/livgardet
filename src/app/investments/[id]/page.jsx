@@ -1,24 +1,19 @@
-import { getSession } from '@auth0/nextjs-auth0';
 
-//const { user } = await getSession(); 
+'use client';
 
-const fetchInvestmentDetails = async (id) => {
-    const response = await fetch(`http://localhost:3000/api/Investments/${id}`);
-    if (!response.ok) {
-        throw new Error('Failed to fetch investment details');
-    }
-    const data = await response.json();
-    console.log(data.response);
-    return data.response;
-};
+import useSWR from 'swr'
+import { useUser } from '@auth0/nextjs-auth0/client';
 
-const fetchCreateInvestment = async (investmentData) => {
-    const response = await fetch(`http://localhost:3000/api/Investments`,{
-    method: 'POST',
-    headers: {
-        'content-type': 'application/json',
-    },
-    body:JSON.stringify(investmentData),
+const fetcher = (...args) => fetch(...args).then((res) => res.json())
+
+
+const fetchCreateInvestment = async (investmentData,investmentId) => {
+    const response = await fetch(`http://localhost:3000/api/Investments/${investmentId}`, {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json',
+        },
+        body: JSON.stringify(investmentData),
     });
 
     if (!response.ok) {
@@ -27,17 +22,62 @@ const fetchCreateInvestment = async (investmentData) => {
 
     const data = await response.json();
     return data;
+};
+
+
+export default function InvestmentDetails(request) {
+    const { user } = useUser()
+    var amount;
+    var currency = "COP";
+    const responseInvestment = useSWR(`http://localhost:3000/api/Investments/${request.params.id}`, fetcher)
+
+    
+    if (responseInvestment.error) return <div>{error.message}</div>;
+    if (responseInvestment.isLoading) return <div>Loading...</div>;
+    const investment = responseInvestment.data.response
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const investmentData = {
+            user: {
+                email: user.email,
+            },
+            investment: {
+                amount: amount,
+                currency: currency
+            },
+            business: {
+                socialMedia: {
+                    website: investment.socialMedia.website,
+                    facebook: investment.socialMedia.facebook,
+                    instagram: investment.socialMedia.instagram,
+                    youtube: investment.socialMedia.youtube,
+                    x: ""
+                },
+                company: investment.company,
+                campaign: investment.campaign,
+                start: investment.start,
+                end: investment.end
+            }
+        };
+    
+        try {
+            await fetchCreateInvestment(investmentData, request.params.id);
+            alert('Investment posted successfully!');
+        } catch (error) {
+            alert('Failed to post investment details');
+        }
     };
+    
 
+    return (
+        <main className="container mx-auto p-8 bg-gray-100 min-h-screen">
 
-export default async function InvestmentDetails(request) {
-
-    const investment = await fetchInvestmentDetails(request.params.id);
-
-    return (<main className="container mx-auto p-8 bg-gray-100 min-h-screen">
-        {investment ? (
             <div className="bg-white border border-gray-200 rounded-lg shadow-md p-6">
                 <h1 className="text-4xl font-bold mb-8 text-center text-gray-800">Detalles de la Inversión</h1>
+                {investment.imageUrl && (
+                <img src={investment.imageUrl} alt="Imagen de la inversión" className="mx-auto mb-8" />
+            )}
                 <div className="mb-8">
                     <h2 className="text-2xl font-semibold text-gray-800">{investment.company}</h2>
                     <h3 className="text-xl font-medium text-gray-600">{investment.campaign}</h3>
@@ -112,20 +152,39 @@ export default async function InvestmentDetails(request) {
                             <p className="text-gray-700"><span className="font-semibold">Fecha de fin de la Inversión:</span> {investment.end}</p>
                         </div>
                     </div>
-                    <div className="mt-8 text-center">
-                        <button
-                            //onClick={handleSendData}
-                            className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700"
-                        >
-                            Invertir
-                        </button>
-                    </div>
+
                 </div>
+                {user ?
+                    <form onSubmit={handleSubmit} className="mt-8">
+
+                        <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="amount">
+                                Monto de la Inversión
+                            </label>
+                            <input
+                                id="amount"
+                                type="number"
+                                value={amount}
+                                onChange={(e) => amount = e.target.value}
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                required
+                            />
+                        </div>
+
+                        <div className="text-center">
+                            <button
+                                type="submit"
+                                className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700"
+                            >
+                                Invertir
+                            </button>
+                        </div>
+                    </form> : <div className="text-center mt-8">
+        <p className="text-gray-700">Inicia sesión para invertir</p>
+    </div>
+                }
             </div>
-        ) : (
-            <p className="text-center text-gray-500">No se encontró el Emprendimiento</p>
-        )}
-    </main>
+
+        </main>
     );
 };
-

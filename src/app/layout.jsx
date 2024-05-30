@@ -55,6 +55,9 @@ async function Header() {
               <li>
                 <a href="/api/auth/logout" className="hover:text-gray-300">Cerrar Sesión</a>
               </li>
+              <li>
+                <a href="nuevo" className="hover:text-gray-300">Subir un emprendimiento</a>
+              </li>
             </>
           )}
         </ul>
