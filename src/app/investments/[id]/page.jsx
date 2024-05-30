@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react';
 import { getSession } from '@auth0/nextjs-auth0';
 
-
-
 const fetchInvestmentDetails = async (id) => {
     const response = await fetch(`http://localhost:3000/api/Investments/${id}`);
     if (!response.ok) {
